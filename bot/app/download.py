@@ -20,7 +20,6 @@ class Downloader:
         return self.ydl_opts['outtmpl']
     
 
-ytd = Downloader()
 
 
     

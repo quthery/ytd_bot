@@ -4,7 +4,7 @@ from aiogram.filters import CommandStart
 from bot.app.download import Downloader
 from bot.get_lastest_video import last_modified_file
 import os
-import re
+
 
 router = Router()
 ytd = Downloader()
@@ -30,19 +30,25 @@ async def return_video(message: Message):
     await message.answer("⌛")
     links = str(message.text).split(", ")
     dynamic_path = f"bot/videos/{message.from_user.id}"
-    filename = last_modified_file(dynamic_path, len(links))
+    
     await ytd.download_video(links, dynamic_path)
+    filename = last_modified_file(dynamic_path)
+    
     if len(links) >= 2:
-        async for i in range(len(links)):
+        await message.bot.delete_message(chat_id=message.chat.id, 
+                                         message_id=message.message_id-1)
+        for i in range(len(links)):
             await message.answer_video(
+                video=FSInputFile(
+                    path=filename[i]
+                )
+            )
+    else:
+        await message.answer_video(
             video=FSInputFile(
-            path=filename[i]
-        ))
+                path=filename[0]
+            )
+        )
+        os.remove(dynamic_path)
 
 
-    print(str(filename))
-    await message.answer_video(
-        video=FSInputFile(
-            path=filename[0]
-        )
-        )
