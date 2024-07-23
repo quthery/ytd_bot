@@ -3,7 +3,7 @@ from aiogram.types import Message, FSInputFile, InputPaidMediaVideo
 from aiogram.filters import CommandStart
 from bot.app.download import Downloader
 from bot.get_lastest_video import last_modified_file
-import os
+import shutil
 
 
 router = Router()
@@ -33,12 +33,10 @@ async def return_video(message: Message):
     
     await ytd.download_video(links, dynamic_path)
     filename = last_modified_file(dynamic_path)
-    
+
     if len(links) >= 2:
-        await message.bot.delete_message(chat_id=message.chat.id, 
-                                         message_id=message.message_id-1)
         for i in range(len(links)):
-            await message.answer_video(
+            await message.edit_media(
                 video=FSInputFile(
                     path=filename[i]
                 )
@@ -49,6 +47,6 @@ async def return_video(message: Message):
                 path=filename[0]
             )
         )
-        os.remove(dynamic_path)
+        shutil.rmtree(dynamic_path)
 
 
