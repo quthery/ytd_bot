@@ -19,8 +19,11 @@ async def start(message: Message):
 @router.message(F.text)
 async def return_video(message: Message):
     url = Downloader.get_direct_link(str(message.text))
-    await message.answer(url)
+    print(url)
+    
     link = Downloader.get_direct_link1(str(message.text))
+    print(link)
+    await message.answer(url)
     await message.answer(link)
 
 
