@@ -24,6 +24,7 @@ class Downloader:
         with yt_dlp.YoutubeDL(ydl_opts) as ytdl:
             info = ytdl.extract_info("https://twitter.com/MissMikkaa/status/1568324392953827328", download=False)
             url = info["url"]
+        print(url)
         return url
     
     def get_direct_link1(video_url):
@@ -40,6 +41,7 @@ class Downloader:
         for x in range(len(L)):
             if L[x].get('height', 0) == 1280:
                 direct_link = L[x]['url']
+                print(direct_link)
                 return direct_link
 
 
