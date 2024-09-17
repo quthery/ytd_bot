@@ -9,44 +9,18 @@ import shutil
 router = Router()
 ytd = Downloader()
 
-ascii_art = '''
-   ('-.                     ) (`-.    _ .-') _            _ (`-.  
-  ( OO ).-.                  ( OO ). ( (  OO) )          ( (OO  ) 
-  / . --. /,--.    ,--. ,--.(_/.  \_)-\     .'_ ,--.    _.`     \ 
-  | \-.  \ |  |.-')|  | |  | \  `.'  /,`'--..._)|  |.-'(__...--'' 
-.-'-'  |  ||  | OO |  | | .-')\     /\|  |  \  '|  | OO |  /  | | 
- \| |_.'  ||  |`-' |  |_|( OO )\   \ ||  |   ' ||  |`-' |  |_.' | 
-  |  .-.  (|  '---.|  | | `-' .'    \_|  |   / (|  '---.|  .___.' 
-  |  | |  ||      ('  '-'(_.-/  .'.  \|  '--'  /|      ||  |      
-  `--' `--'`------' `-----' '--'   '--`-------' `------'`--'      
-'''
+
+
 
 @router.message(CommandStart())
 async def start(message: Message):
-    await message.answer(ascii_art)
+    await message.answer("Привет 👋")
 
 @router.message(F.text)
 async def return_video(message: Message):
-    await message.answer("⌛")
-    links = str(message.text).split(", ")
-    dynamic_path = f"bot/videos/{message.from_user.id}"
-    
-    await ytd.download_video(links, dynamic_path)
-    filename = last_modified_file(dynamic_path)
-
-    if len(links) >= 2:
-        for i in range(len(links)):
-            await message.edit_media(
-                video=FSInputFile(
-                    path=filename[i]
-                )
-            )
-    else:
-        await message.answer_video(
-            video=FSInputFile(
-                path=filename[0]
-            )
-        )
-        shutil.rmtree(dynamic_path)
+    url = Downloader.get_direct_link(message.text)
+    await message.answer(url)
+    link = Downloader.get_direct_link1(message.text)
+    await message.answer(link)
 
 
